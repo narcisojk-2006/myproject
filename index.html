@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AquaServe — Smart Water District Management</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">◈</span>
+        <span>AquaServe</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="report.html">Report Issue</a></li>
+        <li><a href="billing.html">Billing</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="dashboard.html">Staff Portal</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="report.html" class="btn btn-primary nav-cta">Report an Issue</a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-wave wave1"></div>
+      <div class="hero-wave wave2"></div>
+      <div class="hero-wave wave3"></div>
+    </div>
+    <div class="container hero-content">
+      <div class="hero-badge">Smart Water Management</div>
+      <h1 class="hero-title">
+        Water services,<br/>
+        <em>reimagined</em> for you.
+      </h1>
+      <p class="hero-desc">AquaServe connects customers and water district personnel on one unified platform — faster reports, real-time tracking, and transparent billing.</p>
+      <div class="hero-btns">
+        <a href="report.html" class="btn btn-primary btn-lg">Report a Water Issue</a>
+        <a href="#features" class="btn btn-ghost btn-lg">Explore Features</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">98%</span>
+          <span class="stat-label">Customer Satisfaction</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">3x</span>
+          <span class="stat-label">Faster Response Time</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">24/7</span>
+          <span class="stat-label">Real-time Tracking</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how-it-works" id="how">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Simple Process</span>
+        <h2>How AquaServe Works</h2>
+        <p>From issue to resolution — a streamlined 4-step process</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card" data-step="01">
+          <div class="step-icon">📸</div>
+          <h3>Report the Issue</h3>
+          <p>Upload a photo and describe the problem. Our system categorizes and prioritizes it instantly.</p>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-card" data-step="02">
+          <div class="step-icon">🎫</div>
+          <h3>Get a Request ID</h3>
+          <p>Receive a unique tracking ID with real-time status updates via automated notifications.</p>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-card" data-step="03">
+          <div class="step-icon">🔧</div>
+          <h3>Field Dispatch</h3>
+          <p>Staff assigns a field worker based on location and availability. Track them live on the map.</p>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-card" data-step="04">
+          <div class="step-icon">⭐</div>
+          <h3>Rate & Review</h3>
+          <p>Once resolved, share your feedback to help us continuously improve our services.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Features</span>
+        <h2>Everything you need, in one place</h2>
+        <p>Powerful tools for customers and water district personnel alike</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card feature-large">
+          <div class="feature-icon-wrap blue">💧</div>
+          <h3>Smart Issue Reporting</h3>
+          <p>Report leaks, low pressure, or service interruptions with photo uploads and automatic priority classification. Urgent issues are escalated immediately.</p>
+          <a href="report.html" class="feature-link">Report Now →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap teal">📊</div>
+          <h3>Real-time Tracking</h3>
+          <p>Follow your request from submission to resolution with live status updates at every stage.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap amber">💳</div>
+          <h3>Billing & Payments</h3>
+          <p>View bills, payment history, and pay securely online. Digital receipts stored automatically.</p>
+          <a href="billing.html" class="feature-link">View Billing →</a>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap purple">🔔</div>
+          <h3>Smart Notifications</h3>
+          <p>Automated alerts keep you informed at every step — no more calling in to check status.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap green">📚</div>
+          <h3>Troubleshooting Guide</h3>
+          <p>Browse our FAQ to resolve minor issues yourself before filing a service request.</p>
+          <a href="faq.html" class="feature-link">Browse FAQ →</a>
+        </div>
+        <div class="feature-card feature-large staff-card">
+          <div class="feature-icon-wrap coral">🛡️</div>
+          <h3>Staff Operations Portal</h3>
+          <p>Powerful dashboard for district personnel — assign field workers, monitor KPIs, generate reports, and analyze system performance with data-driven insights.</p>
+          <a href="dashboard.html" class="feature-link">Staff Login →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRIORITY SYSTEM ── -->
+  <section class="priority-section">
+    <div class="container">
+      <div class="priority-layout">
+        <div class="priority-text">
+          <span class="section-tag">Priority System</span>
+          <h2>Urgent issues get<br/><em>urgent attention</em></h2>
+          <p>Our intelligent triage system automatically categorizes incoming reports by severity, ensuring that critical infrastructure issues are always addressed first.</p>
+          <a href="report.html" class="btn btn-primary">Report an Issue</a>
+        </div>
+        <div class="priority-cards">
+          <div class="priority-card critical">
+            <div class="priority-badge">Critical</div>
+            <div class="priority-name">Major Pipe Burst</div>
+            <div class="priority-eta">Response: &lt;1 hour</div>
+            <div class="priority-bar"><div class="bar-fill" style="width:100%"></div></div>
+          </div>
+          <div class="priority-card high">
+            <div class="priority-badge">High</div>
+            <div class="priority-name">Water Leak</div>
+            <div class="priority-eta">Response: 2–4 hours</div>
+            <div class="priority-bar"><div class="bar-fill" style="width:75%"></div></div>
+          </div>
+          <div class="priority-card medium">
+            <div class="priority-badge">Medium</div>
+            <div class="priority-name">Low Water Pressure</div>
+            <div class="priority-eta">Response: 24 hours</div>
+            <div class="priority-bar"><div class="bar-fill" style="width:50%"></div></div>
+          </div>
+          <div class="priority-card low">
+            <div class="priority-badge">Low</div>
+            <div class="priority-name">Billing Concern</div>
+            <div class="priority-eta">Response: 48 hours</div>
+            <div class="priority-bar"><div class="bar-fill" style="width:25%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Testimonials</span>
+        <h2>What residents are saying</h2>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"Reported a leak at 9 PM and it was fixed by morning. The real-time tracking gave me peace of mind the whole time."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MA</div>
+            <div>
+              <strong>Maria A.</strong>
+              <span>Barangay San Nicolas</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card featured">
+          <div class="stars">★★★★★</div>
+          <p>"Finally — a way to pay my water bill without lining up. The billing portal is clean, fast, and I always get an email receipt."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">RD</div>
+            <div>
+              <strong>Ricardo D.</strong>
+              <span>Barangay Lahug</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"The troubleshooting guide helped me fix my low-pressure issue myself. Didn't even need to file a request. Huge time saver."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">JT</div>
+            <div>
+              <strong>Jessa T.</strong>
+              <span>Barangay Apas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div class="container cta-inner">
+      <h2>Have a water concern right now?</h2>
+      <p>Submit a report in under 2 minutes. Our team is standing by.</p>
+      <div class="cta-btns">
+        <a href="report.html" class="btn btn-white btn-lg">Report an Issue</a>
+        <a href="faq.html" class="btn btn-ghost-white btn-lg">Browse FAQ First</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <span class="logo-icon">◈</span>
+          <span>AquaServe</span>
+        </a>
+        <p>Smart Water District Management &amp; Efficiency Monitoring System</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Customer</h4>
+          <ul>
+            <li><a href="report.html">Report Issue</a></li>
+            <li><a href="billing.html">Billing &amp; Payments</a></li>
+            <li><a href="faq.html">FAQ &amp; Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Staff</h4>
+          <ul>
+            <li><a href="dashboard.html">Staff Dashboard</a></li>
+            <li><a href="dashboard.html#reports">Reports</a></li>
+            <li><a href="dashboard.html#workers">Field Workers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:support@aquaserve.ph">support@aquaserve.ph</a></li>
+            <li><a href="tel:+63321234567">(032) 123-4567</a></li>
+            <li><span>Cebu City, Philippines</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2025 AquaServe. All rights reserved. | Jake C. Narciso — COE 241-A</p>
+      </div>
+    </div>
+  </footer>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

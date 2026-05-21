@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Dashboard — AquaServe</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    body { background: #f0f4f8; }
+    /* LOGIN */
+    .staff-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, #001342, #003eb3); }
+    .login-box { background: var(--white); border-radius: var(--radius-xl); padding: 48px 40px; max-width: 400px; width: 100%; box-shadow: var(--shadow-lg); text-align: center; }
+    .login-box .logo { font-size: 2.5rem; margin-bottom: 8px; }
+    .login-box h2 { font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 4px; }
+    .login-box p { color: var(--gray-500); font-size: 13px; margin-bottom: 28px; }
+    .login-box .form-group { text-align: left; margin-bottom: 16px; }
+    .login-box .btn { width: 100%; justify-content: center; margin-top: 8px; }
+    /* DASHBOARD LAYOUT */
+    .dash-layout { display: none; min-height: 100vh; flex-direction: column; }
+    .dash-layout.active { display: flex; }
+    .dash-topbar { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .dash-topbar .topbar-brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; color: var(--blue-600); }
+    .dash-topbar .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .dash-topbar .staff-name { font-size: 13px; color: var(--gray-600); }
+    .dash-body { display: grid; grid-template-columns: 220px 1fr; flex: 1; }
+    /* SIDEBAR NAV */
+    .dash-sidenav { background: var(--white); border-right: 1px solid var(--gray-200); padding: 24px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .dash-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; color: var(--gray-600); cursor: pointer; transition: all 0.15s; }
+    .dash-nav-item:hover { background: var(--gray-100); color: var(--gray-900); }
+    .dash-nav-item.active { background: var(--blue-50); color: var(--blue-600); }
+    .dash-nav-item .nav-icon { font-size: 16px; }
+    /* MAIN CONTENT */
+    .dash-main { padding: 28px; overflow-y: auto; }
+    .dash-section { display: none; }
+    .dash-section.active { display: block; }
+    /* KPI CARDS */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .kpi-card { background: var(--white); border-radius: var(--radius-md); padding: 20px 22px; border: 1px solid var(--gray-200); }
+    .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); margin-bottom: 8px; }
+    .kpi-value { font-family: var(--font-display); font-size: 2rem; color: var(--gray-900); line-height: 1; margin-bottom: 4px; }
+    .kpi-sub { font-size: 12px; color: var(--gray-500); }
+    /* REQUESTS TABLE */
+    .requests-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .filter-btn { padding: 6px 16px; border-radius: 99px; border: 1.5px solid var(--gray-200); background: var(--white); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .filter-btn.active, .filter-btn:hover { background: var(--blue-500); color: white; border-color: var(--blue-500); }
+    .action-btn { padding: 5px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; border: 1.5px solid; cursor: pointer; background: transparent; transition: all 0.15s; }
+    .action-btn.assign { border-color: var(--blue-500); color: var(--blue-500); }
+    .action-btn.assign:hover { background: var(--blue-50); }
+    .action-btn.resolve { border-color: var(--green-500); color: var(--green-600); }
+    .action-btn.resolve:hover { background: var(--green-50); }
+    /* WORKERS */
+    .workers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .worker-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 20px; }
+    .worker-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .worker-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--blue-50); color: var(--blue-600); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .worker-name { font-weight: 600; font-size: 14px; }
+    .worker-role { font-size: 12px; color: var(--gray-500); }
+    /* CHART BAR */
+    .mini-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; padding: 8px 0; }
+    .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .chart-bar { width: 100%; background: var(--blue-500); border-radius: 3px 3px 0 0; min-height: 4px; transition: height 0.5s ease; }
+    .chart-bar-label { font-size: 10px; color: var(--gray-500); }
+    @media (max-width: 900px) {
+      .dash-body { grid-template-columns: 1fr; }
+      .dash-sidenav { display: none; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .workers-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 500px) { .kpi-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- STAFF LOGIN -->
+  <div class="staff-login" id="staffLogin">
+    <div class="login-box">
+      <div class="logo">◈</div>
+      <h2>AquaServe Staff Portal</h2>
+      <p>Sign in with your employee credentials to continue.</p>
+      <div class="form-group">
+        <label class="form-label">Employee ID</label>
+        <input type="text" class="form-control" id="empId" placeholder="e.g. EMP-001" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" id="empPass" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-primary btn-lg" onclick="staffLogin()">Sign In →</button>
+      <p style="font-size:12px;color:var(--gray-400);margin-top:16px;">Demo: any Employee ID + any password</p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dash-layout" id="dashLayout">
+
+    <!-- TOP BAR -->
+    <div class="dash-topbar">
+      <div class="topbar-brand"><span>◈</span><span>AquaServe</span><span style="font-size:11px;color:var(--gray-400);font-weight:400;"> / Staff Portal</span></div>
+      <div class="topbar-right">
+        <span class="staff-name">👤 <span id="staffName">Staff</span></span>
+        <button class="btn btn-ghost btn-sm" onclick="staffLogout()">Sign Out</button>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <!-- SIDE NAV -->
+      <div class="dash-sidenav">
+        <div class="dash-nav-item active" onclick="switchTab('overview', this)"><span class="nav-icon">📊</span>Overview</div>
+        <div class="dash-nav-item" onclick="switchTab('requests', this)"><span class="nav-icon">📋</span>Service Requests</div>
+        <div class="dash-nav-item" onclick="switchTab('workers', this)" id="workers-tab"><span class="nav-icon">👷</span>Field Workers</div>
+        <div class="dash-nav-item" onclick="switchTab('reports', this)" id="reports-tab"><span class="nav-icon">📈</span>Reports</div>
+        <div style="margin-top:auto;">
+          <div class="dash-nav-item" onclick="window.location.href='index.html'"><span class="nav-icon">🏠</span>Back to Site</div>
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="dash-main">
+
+        <!-- OVERVIEW -->
+        <div class="dash-section active" id="sec-overview">
+          <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:6px;">Good morning 👋</h2>
+          <p style="color:var(--gray-500);font-size:14px;margin-bottom:24px;" id="dashDate">Today is —</p>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-label">Total Requests</div>
+              <div class="kpi-value" id="kpiTotal">0</div>
+              <div class="kpi-sub">All time</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Pending</div>
+              <div class="kpi-value" style="color:var(--amber-600);" id="kpiPending">0</div>
+              <div class="kpi-sub">Awaiting action</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Ongoing</div>
+              <div class="kpi-value" style="color:var(--blue-600);" id="kpiOngoing">0</div>
+              <div class="kpi-sub">In progress</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Resolved</div>
+              <div class="kpi-value" style="color:var(--green-600);" id="kpiResolved">0</div>
+              <div class="kpi-sub">Completed</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div class="card">
+              <div class="card-title">Issue Type Breakdown</div>
+              <div id="issueBreakdown"><p style="color:var(--gray-400);font-size:13px;">No data yet.</p></div>
+            </div>
+            <div class="card">
+              <div class="card-title">Priority Distribution</div>
+              <div id="priorityBreakdown"><p style="color:var(--gray-400);font-size:13px;">No data yet.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVICE REQUESTS -->
+        <div class="dash-section" id="sec-requests">
+          <div class="requests-header">
+            <h2 style="font-family:var(--font-display);font-size:1.4rem;">Service Requests</h2>
+            <div class="filter-row" id="filterRow">
+              <button class="filter-btn active" data-filter="all" onclick="filterRequests('all',this)">All</button>
+              <button class="filter-btn" data-filter="pending" onclick="filterRequests('pending',this)">Pending</button>
+              <button class="filter-btn" data-filter="ongoing" onclick="filterRequests('ongoing',this)">Ongoing</button>
+              <button class="filter-btn" data-filter="resolved" onclick="filterRequests('resolved',this)">Resolved</button>
+            </div>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Request ID</th><th>Name</th><th>Issue</th><th>Priority</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="requestsTable"><tr><td colspan="7" style="text-align:center;color:var(--gray-400);padding:32px;">No reports submitted yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIELD WORKERS -->
+        <div class="dash-section" id="sec-workers">
+          <h2 style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:20px;">Field Workers</h2>
+          <div class="workers-grid" id="workersGrid"></div>
+        </div>
+
+        <!-- REPORTS -->
+        <div class="dash-section" id="sec-reports">
+          <h2 style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:20px;">Performance Reports</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div class="card">
+              <div class="card-title">Monthly Request Volume</div>
+              <div class="mini-chart" id="monthlyChart"></div>
+            </div>
+            <div class="card">
+              <div class="card-title">Response Metrics</div>
+              <div id="metricsBox"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:20px;">
+            <div class="card-title" style="margin-bottom:16px;">Export Reports</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="window.showToast('Report exported as CSV (demo)', 'success')">📥 Export CSV</button>
+              <button class="btn btn-ghost" onclick="window.showToast('Report exported as PDF (demo)', 'success')">📄 Export PDF</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

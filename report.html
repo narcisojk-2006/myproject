@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report an Issue — AquaServe</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    .report-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; padding: 60px 0 80px; align-items: start; }
+    .report-form-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 40px; }
+    .report-form-card h2 { font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 8px; }
+    .report-form-card > p { color: var(--gray-600); font-size: 14px; margin-bottom: 32px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .priority-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 4px; }
+    .priority-opt { position: relative; }
+    .priority-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .priority-opt label {
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 12px 16px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--gray-200); cursor: pointer;
+      transition: all 0.2s; font-size: 13px;
+    }
+    .priority-opt label strong { font-size: 14px; font-weight: 600; }
+    .priority-opt input:checked + label { border-color: var(--blue-500); background: var(--blue-50); }
+    .priority-opt.critical input:checked + label { border-color: #ff4d4f; background: #fff1f0; }
+    .priority-opt.high input:checked + label { border-color: #fa8c16; background: #fff7e6; }
+    .priority-opt.medium input:checked + label { border-color: #faad14; background: #fffbe6; }
+    .priority-opt.low input:checked + label { border-color: #52c41a; background: #f6ffed; }
+    .submit-btn { width: 100%; margin-top: 8px; justify-content: center; }
+    /* Sidebar */
+    .report-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 90px; }
+    .sidebar-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 24px; }
+    .sidebar-card h3 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 16px; }
+    .track-form { display: flex; gap: 8px; }
+    .track-form input { flex: 1; }
+    .info-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .info-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--gray-600); }
+    .info-list li span:first-child { font-size: 16px; flex-shrink: 0; }
+    /* Success modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 2000; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--white); border-radius: var(--radius-xl);
+      padding: 48px 40px; max-width: 480px; width: 90%;
+      text-align: center; box-shadow: var(--shadow-lg);
+      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-icon { font-size: 4rem; margin-bottom: 20px; }
+    .modal-box h2 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 8px; }
+    .modal-box p { color: var(--gray-600); margin-bottom: 12px; font-size: 15px; }
+    .request-id { font-size: 1.5rem; font-weight: 700; color: var(--blue-600); letter-spacing: 0.08em; padding: 12px 24px; background: var(--blue-50); border-radius: var(--radius-sm); display: inline-block; margin: 12px 0 24px; }
+    @media (max-width: 900px) { .report-layout { grid-template-columns: 1fr; } .report-sidebar { position: static; } }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .priority-selector { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="logo-icon">◈</span><span>AquaServe</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="report.html" class="active">Report Issue</a></li>
+        <li><a href="billing.html">Billing</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="dashboard.html">Staff Portal</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="margin-bottom:16px;">Customer Portal</div>
+      <h1>Report a Water Issue</h1>
+      <p>Submit your concern and we'll handle it — fast, transparent, and trackable.</p>
+    </div>
+  </section>
+
+  <div class="container report-layout">
+
+    <!-- FORM -->
+    <div class="report-form-card">
+      <h2>Issue Report Form</h2>
+      <p>Fill in the details below. All fields marked * are required.</p>
+      <form id="reportForm" novalidate>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-control" id="fullName" placeholder="Juan dela Cruz" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Number *</label>
+            <input type="tel" class="form-control" id="contact" placeholder="09XX XXX XXXX" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Service Address *</label>
+          <input type="text" class="form-control" id="address" placeholder="House No., Street, Barangay" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Issue Type *</label>
+          <select class="form-control" id="issueType" required>
+            <option value="">— Select an issue type —</option>
+            <option value="major-leak">Major Pipe Burst / Major Leak</option>
+            <option value="leak">Water Leak</option>
+            <option value="low-pressure">Low Water Pressure</option>
+            <option value="no-water">No Water Supply</option>
+            <option value="contamination">Water Contamination / Discoloration</option>
+            <option value="meter">Meter Issue</option>
+            <option value="billing">Billing Concern</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Priority Level *</label>
+          <div class="priority-selector">
+            <div class="priority-opt critical">
+              <input type="radio" name="priority" id="p-critical" value="critical" />
+              <label for="p-critical"><strong>🔴 Critical</strong><span>Immediate danger / flooding</span></label>
+            </div>
+            <div class="priority-opt high">
+              <input type="radio" name="priority" id="p-high" value="high" />
+              <label for="p-high"><strong>🟠 High</strong><span>Active leak / no supply</span></label>
+            </div>
+            <div class="priority-opt medium">
+              <input type="radio" name="priority" id="p-medium" value="medium" checked />
+              <label for="p-medium"><strong>🟡 Medium</strong><span>Low pressure / discoloration</span></label>
+            </div>
+            <div class="priority-opt low">
+              <input type="radio" name="priority" id="p-low" value="low" />
+              <label for="p-low"><strong>🟢 Low</strong><span>Billing / minor concern</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea class="form-control" id="description" rows="4" placeholder="Describe the issue in detail — when it started, how severe it is, etc." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload Photo (optional)</label>
+          <div class="upload-area" id="uploadArea">
+            <input type="file" id="photoInput" accept="image/*" style="display:none" />
+            <div class="upload-icon">📷</div>
+            <p>Drag & drop a photo here, or click to browse</p>
+            <span>JPG, PNG, WEBP — max 10MB</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg submit-btn">Submit Issue Report →</button>
+      </form>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="report-sidebar">
+      <div class="sidebar-card">
+        <h3>Track Existing Request</h3>
+        <p style="font-size:13px;color:var(--gray-600);margin-bottom:16px;">Enter your Request ID to check status.</p>
+        <div class="track-form">
+          <input type="text" class="form-control" id="trackId" placeholder="e.g. AQ-2025-00123" />
+          <button class="btn btn-primary btn-sm" onclick="trackRequest()">Track</button>
+        </div>
+        <div id="trackResult" style="margin-top:14px;"></div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>What Happens Next?</h3>
+        <ul class="info-list">
+          <li><span>🎫</span><span>You'll receive a unique <strong>Request ID</strong> immediately.</span></li>
+          <li><span>📋</span><span>Your issue is <strong>auto-categorized</strong> and sent to staff.</span></li>
+          <li><span>🔔</span><span>Get <strong>SMS/email alerts</strong> at every status change.</span></li>
+          <li><span>🔧</span><span>A <strong>field worker</strong> is dispatched based on priority.</span></li>
+          <li><span>⭐</span><span>After resolution, you'll be asked to <strong>rate the service</strong>.</span></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card" style="background:var(--blue-50);border-color:var(--blue-100);">
+        <h3>Emergency?</h3>
+        <p style="font-size:13px;color:var(--gray-700);margin-bottom:16px;">For flooding or burst pipes, call us directly:</p>
+        <a href="tel:+63321234567" class="btn btn-primary" style="width:100%;justify-content:center;">📞 (032) 123-4567</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-box">
+      <div class="modal-icon">✅</div>
+      <h2>Report Submitted!</h2>
+      <p>Your issue has been received and is now being reviewed by our team.</p>
+      <div class="request-id" id="generatedId">AQ-2025-00000</div>
+      <p style="font-size:13px;">Save this ID to track your request status.</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:8px;">
+        <button class="btn btn-primary" onclick="closeModal()">Done</button>
+        <a href="index.html" class="btn btn-ghost">Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom"><div class="container"><p>&copy; 2025 AquaServe — Smart Water District Management</p></div></div>
+  </footer>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/report.js"></script>
+</body>
+</html>

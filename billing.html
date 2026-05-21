@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billing & Payments — AquaServe</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    .billing-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; padding: 60px 0 80px; align-items: start; }
+    /* Login card */
+    .login-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 40px; text-align: center; }
+    .login-card .login-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .login-card h2 { font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 8px; }
+    .login-card > p { color: var(--gray-600); font-size: 14px; margin-bottom: 28px; }
+    .login-card .form-group { text-align: left; }
+    .login-card .btn { width: 100%; justify-content: center; margin-top: 8px; }
+    /* Dashboard */
+    .billing-dashboard { display: none; flex-direction: column; gap: 24px; }
+    .billing-dashboard.active { display: flex; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .stat-card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md); padding: 20px;
+    }
+    .stat-card .stat-label { font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .stat-card .stat-value { font-family: var(--font-display); font-size: 1.8rem; color: var(--gray-900); }
+    .stat-card .stat-sub { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+    /* Bill card */
+    .bill-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 32px; }
+    .bill-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .bill-title { font-family: var(--font-display); font-size: 1.3rem; }
+    .bill-items { border-top: 1px solid var(--gray-100); }
+    .bill-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--gray-100); font-size: 14px; }
+    .bill-row.total { border-top: 2px solid var(--gray-200); border-bottom: none; font-weight: 600; font-size: 16px; padding-top: 16px; }
+    .bill-row span:last-child { font-weight: 500; }
+    /* Payment modal */
+    .pay-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+    .pay-modal-overlay.open { display: flex; }
+    .pay-modal { background: var(--white); border-radius: var(--radius-xl); padding: 40px; max-width: 440px; width: 90%; box-shadow: var(--shadow-lg); animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .pay-modal h2 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 4px; }
+    .pay-modal > p { color: var(--gray-500); font-size: 13px; margin-bottom: 24px; }
+    .pay-methods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .pay-method { border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.15s; font-size: 12px; font-weight: 500; }
+    .pay-method:hover, .pay-method.selected { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-600); }
+    .pay-method .method-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+    /* Sidebar */
+    .billing-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 90px; }
+    .sidebar-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 24px; }
+    .sidebar-card h3 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 16px; }
+    @media (max-width: 900px) { .billing-layout { grid-template-columns: 1fr; } .billing-sidebar { position: static; } }
+    @media (max-width: 500px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="logo-icon">◈</span><span>AquaServe</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="report.html">Report Issue</a></li>
+        <li><a href="billing.html" class="active">Billing</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="dashboard.html">Staff Portal</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="margin-bottom:16px;">Customer Billing</div>
+      <h1>Billing & Payments</h1>
+      <p>View your current bill, payment history, and pay securely online.</p>
+    </div>
+  </section>
+
+  <div class="container billing-layout">
+
+    <!-- LEFT MAIN -->
+    <div>
+      <!-- LOGIN -->
+      <div class="login-card" id="loginSection">
+        <div class="login-icon">💳</div>
+        <h2>Access Your Billing</h2>
+        <p>Enter your account details to view your bill and payment history.</p>
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input type="text" class="form-control" id="accountNum" placeholder="e.g. WD-2024-001234" />
+        </div>
+        <div class="form-group" style="margin-top:14px;">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="lastName" placeholder="Your last name" />
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="loginBilling()" style="margin-top:20px;">View My Bill →</button>
+        <p style="font-size:12px;color:var(--gray-400);margin-top:16px;">Demo: use any Account Number and Last Name</p>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="billing-dashboard" id="billingDashboard">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h2 style="font-family:var(--font-display);font-size:1.5rem;">Welcome back, <span id="welcomeName">Juan</span></h2>
+            <p style="font-size:13px;color:var(--gray-500);">Account No: <span id="displayAccount">WD-2024-001234</span></p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="logoutBilling()">Sign Out</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Current Balance</div>
+            <div class="stat-value" style="color:var(--coral-600);">₱<span id="currentBalance">0</span></div>
+            <div class="stat-sub">Due: <span id="dueDate">—</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Consumption</div>
+            <div class="stat-value"><span id="consumption">0</span><span style="font-size:1rem;color:var(--gray-500);"> m³</span></div>
+            <div class="stat-sub">This billing period</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Account Status</div>
+            <div class="stat-value" style="font-size:1.1rem;padding-top:4px;"><span class="badge badge-resolved">Active</span></div>
+            <div class="stat-sub">In good standing</div>
+          </div>
+        </div>
+
+        <div class="bill-card">
+          <div class="bill-header">
+            <div>
+              <div class="bill-title">Current Bill</div>
+              <p style="font-size:13px;color:var(--gray-500);margin-top:4px;">Billing Period: <span id="billPeriod">—</span></p>
+            </div>
+            <span class="badge badge-pending" id="billStatus">Unpaid</span>
+          </div>
+          <div class="bill-items">
+            <div class="bill-row"><span>Basic Charge</span><span>₱85.00</span></div>
+            <div class="bill-row"><span>Consumption Charge (<span id="billConsumption">0</span> m³)</span><span>₱<span id="consumptionCharge">0</span></span></div>
+            <div class="bill-row"><span>Environmental Fee</span><span>₱12.00</span></div>
+            <div class="bill-row"><span>Maintenance Fee</span><span>₱25.00</span></div>
+            <div class="bill-row"><span>VAT (12%)</span><span>₱<span id="vatAmount">0</span></span></div>
+            <div class="bill-row total"><span>Total Amount Due</span><span>₱<span id="totalDue">0</span></span></div>
+          </div>
+          <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="openPayModal()">Pay Now →</button>
+            <button class="btn btn-ghost" onclick="printReceipt()">🖨️ Download Bill</button>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="bill-card">
+          <div class="bill-title" style="margin-bottom:20px;">Payment History</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Period</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+              <tbody id="historyTable">
+                <tr><td colspan="5" style="text-align:center;color:var(--gray-400);padding:24px;">No payment history yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="billing-sidebar">
+      <div class="sidebar-card">
+        <h3>Payment Options</h3>
+        <ul class="info-list">
+          <li><span>💳</span><span><strong>Online</strong> — Pay via GCash, Maya, or card anytime.</span></li>
+          <li><span>🏦</span><span><strong>Bank Transfer</strong> — BDO, BPI, UnionBank supported.</span></li>
+          <li><span>🏢</span><span><strong>Walk-in</strong> — Visit our office Mon–Fri, 8AM–5PM.</span></li>
+        </ul>
+      </div>
+      <div class="sidebar-card">
+        <h3>Need Help?</h3>
+        <ul class="info-list">
+          <li><span>📞</span><span>Call us: <a href="tel:+63321234567" style="color:var(--blue-500);">(032) 123-4567</a></span></li>
+          <li><span>✉️</span><span>Email: <a href="mailto:billing@aquaserve.ph" style="color:var(--blue-500);">billing@aquaserve.ph</a></span></li>
+          <li><span>❓</span><span><a href="faq.html" style="color:var(--blue-500);">Browse our FAQ</a> for billing questions.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT MODAL -->
+  <div class="pay-modal-overlay" id="payModal">
+    <div class="pay-modal">
+      <h2>Complete Payment</h2>
+      <p>Amount due: <strong>₱<span id="modalAmount">0</span></strong></p>
+      <label class="form-label">Select Payment Method</label>
+      <div class="pay-methods">
+        <div class="pay-method selected" onclick="selectMethod(this,'GCash')"><span class="method-icon">💚</span>GCash</div>
+        <div class="pay-method" onclick="selectMethod(this,'Maya')"><span class="method-icon">💙</span>Maya</div>
+        <div class="pay-method" onclick="selectMethod(this,'Card')"><span class="method-icon">💳</span>Credit/Debit</div>
+        <div class="pay-method" onclick="selectMethod(this,'BDO')"><span class="method-icon">🏦</span>BDO</div>
+        <div class="pay-method" onclick="selectMethod(this,'BPI')"><span class="method-icon">🏦</span>BPI</div>
+        <div class="pay-method" onclick="selectMethod(this,'UnionBank')"><span class="method-icon">🏦</span>UnionBank</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reference / Account No.</label>
+        <input type="text" class="form-control" id="refNum" placeholder="e.g. 09XXXXXXXXXX" />
+      </div>
+      <div style="display:flex;gap:12px;margin-top:20px;">
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="confirmPayment()">Confirm Payment</button>
+        <button class="btn btn-ghost" onclick="closePayModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom"><div class="container"><p>&copy; 2025 AquaServe — Smart Water District Management</p></div></div>
+  </footer>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/billing.js"></script>
+</body>
+</html>

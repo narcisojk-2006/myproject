@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ & Troubleshooting — AquaServe</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    .faq-layout { padding: 60px 0 80px; }
+    .faq-search-bar { max-width: 600px; margin: 0 auto 48px; position: relative; }
+    .faq-search-bar input { width: 100%; padding: 14px 20px 14px 50px; border-radius: 99px; border: 1.5px solid var(--gray-200); font-size: 15px; font-family: var(--font-body); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .faq-search-bar input:focus { border-color: var(--blue-500); box-shadow: 0 0 0 4px rgba(22,119,255,0.1); }
+    .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 18px; pointer-events: none; }
+    .faq-categories { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+    .cat-btn { padding: 7px 18px; border-radius: 99px; border: 1.5px solid var(--gray-200); background: var(--white); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .cat-btn:hover, .cat-btn.active { background: var(--blue-500); color: var(--white); border-color: var(--blue-500); }
+    .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .faq-item { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); overflow: hidden; }
+    .faq-question { padding: 18px 22px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-weight: 500; font-size: 15px; transition: background 0.15s; user-select: none; }
+    .faq-question:hover { background: var(--gray-50); }
+    .faq-item.open .faq-question { background: var(--blue-50); color: var(--blue-700); }
+    .faq-toggle { font-size: 20px; flex-shrink: 0; transition: transform 0.25s; color: var(--gray-400); font-weight: 300; }
+    .faq-item.open .faq-toggle { transform: rotate(45deg); color: var(--blue-500); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.2s; }
+    .faq-item.open .faq-answer { max-height: 400px; }
+    .faq-answer-inner { padding: 0 22px 20px; font-size: 14px; color: var(--gray-600); line-height: 1.75; border-top: 1px solid var(--gray-100); padding-top: 16px; }
+    .faq-answer-inner ul { list-style: disc; padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .no-results { text-align: center; color: var(--gray-400); padding: 48px; grid-column: 1/-1; font-size: 16px; }
+    .cta-faq { background: var(--blue-50); border-radius: var(--radius-lg); padding: 40px; text-align: center; margin-top: 48px; }
+    .cta-faq h2 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 10px; }
+    .cta-faq p { color: var(--gray-600); margin-bottom: 24px; }
+    .cta-faq-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    @media (max-width: 768px) { .faq-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><span class="logo-icon">◈</span><span>AquaServe</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="report.html">Report Issue</a></li>
+        <li><a href="billing.html">Billing</a></li>
+        <li><a href="faq.html" class="active">FAQ</a></li>
+        <li><a href="dashboard.html">Staff Portal</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag" style="margin-bottom:16px;">Self-Service</div>
+      <h1>FAQ & Troubleshooting</h1>
+      <p>Find quick answers to common water service issues and questions.</p>
+    </div>
+  </section>
+
+  <div class="container faq-layout">
+    <div class="section-header">
+      <h2>How can we help you?</h2>
+      <p>Search below or browse by category to find answers fast.</p>
+    </div>
+
+    <div class="faq-search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="faqSearch" placeholder="Search questions... e.g. 'low pressure', 'billing'" />
+    </div>
+
+    <div class="faq-categories">
+      <button class="cat-btn active" data-cat="all">All</button>
+      <button class="cat-btn" data-cat="pressure">Water Pressure</button>
+      <button class="cat-btn" data-cat="leak">Leaks</button>
+      <button class="cat-btn" data-cat="billing">Billing</button>
+      <button class="cat-btn" data-cat="supply">Water Supply</button>
+      <button class="cat-btn" data-cat="meter">Meter</button>
+      <button class="cat-btn" data-cat="quality">Water Quality</button>
+    </div>
+
+    <div class="faq-grid" id="faqGrid"></div>
+
+    <div class="cta-faq">
+      <h2>Still can't find your answer?</h2>
+      <p>Our team is ready to help. Submit a service request or contact us directly.</p>
+      <div class="cta-faq-btns">
+        <a href="report.html" class="btn btn-primary btn-lg">Report an Issue</a>
+        <a href="tel:+63321234567" class="btn btn-ghost btn-lg">📞 Call Support</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom"><div class="container"><p>&copy; 2025 AquaServe — Smart Water District Management</p></div></div>
+  </footer>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/faq.js"></script>
+</body>
+</html>
